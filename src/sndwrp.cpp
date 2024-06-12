@@ -1,9 +1,11 @@
 // API-level implementation of Soundwarp functionality
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <variant>
+#include <sstream>
 #include <string>
 #include <err.hpp>
 #include <sndwrp.hpp>
@@ -189,5 +191,25 @@ std::variant<std::vector<SoundChange>, Error> SoundChange::fromFile(
 
     file.close();
     return changes;
+}
+
+std::variant<std::wstring, Error> SoundChange::apply(const std::wstring &word) const {
+    std::wstringstream changedWord;
+    for (size_t i = 0; i < word.length(); i++) {
+        const bool correctSound = word[i] == a;
+        const bool frontCondFulfilled =
+            (i == 0 && std::count(frntCond.begin(), frntCond.end(), L'#') > 0)
+                || (i > 0 && std::count(frntCond.begin(), frntCond.end(), word[i - 1]) > 0)
+                || frntCond.empty();
+        const bool endCondFulfilled =
+            (i == word.length() - 1 && std::count(endCond.begin(), endCond.end(), L'#') > 0)
+                || (
+                    i + 1 < word.length()
+                        && std::count(endCond.begin(), endCond.end(), word[i + 1]) > 0
+                ) || endCond.empty();
+        const auto c = (correctSound && frontCondFulfilled && endCondFulfilled) ? b : word[i];
+        changedWord << c;
+    }
+    return changedWord.str();
 }
 

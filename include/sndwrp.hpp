@@ -28,7 +28,8 @@ namespace sndwrp {
         std::vector<wchar_t> endCond;
 
         static std::variant<std::vector<SoundChange>, Error> fromFile(const char *const fileName);
-        //static std::variant<std::wstring, Error> apply(const wchar_t *const word);
+
+        std::variant<std::wstring, Error> apply(const std::wstring &word) const;
     };
 }
 
