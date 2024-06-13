@@ -7,6 +7,7 @@
 #include <variant>
 #include <sstream>
 #include <string>
+#include <codecvt>
 #include <err.hpp>
 #include <sndwrp.hpp>
 
@@ -23,6 +24,7 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
     if (!file.is_open()) {
         return Error { ErrorType::FileOpen, "Failed to open '" + std::string(fileName) + "'" };
     }
+    file.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
 
     std::vector<SoundChange> changes;
     size_t ln = 1;
@@ -48,7 +50,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected phoneme at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                "Expected phoneme in '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
         a = line[col - 1];
@@ -61,7 +64,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'>') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '>' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                "Expected '>' in '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
         col++;
@@ -73,7 +77,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected phoneme at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                "Expected phoneme in '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
         b = line[col - 1];
@@ -86,7 +91,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'/') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '/' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                "Expected '/' in '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
         col++;
@@ -98,7 +104,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'{') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '{' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                "Expected '{' in '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
         col++;
@@ -122,7 +129,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
             if (col - 1 >= line.length()) {
                 return Error {
                     ErrorType::FileFormat,
-                    "Expected '}' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                    "Expected '}' in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
                 };
             }
         }
@@ -135,7 +143,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'_') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '_' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                "Expected '_' in '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
         col++;
@@ -147,7 +156,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'{') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '{' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                "Expected '{' in '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
         col++;
@@ -159,7 +169,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '}' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                "Expected '}' in '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
         while (line[col - 1] != L'}') {
@@ -171,7 +182,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
             if (col - 1 >= line.length()) {
                 return Error {
                     ErrorType::FileFormat,
-                    "Expected '}' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                    "Expected '}' in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
                 };
             }
         }
@@ -183,7 +195,7 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 != line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Extra characters on line " + std::to_string(ln)
+                "Extra characters in '" + std::string(fileName) + "' on line " + std::to_string(ln)
             };
         }
 
@@ -194,7 +206,8 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
     if (file.bad()) {
         return Error {
             ErrorType::FileRead,
-            "Failed to read at line " + std::to_string(ln) + ", col " + std::to_string(col)
+            "Failed to read '" + std::string(fileName)
+                + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
         };
     }
 
