@@ -10,10 +10,10 @@
 #include <err.hpp>
 #include <sndwrp.hpp>
 
+using namespace natevolve;
 using namespace sndwrp;
 
-std::variant<std::vector<SoundChange>, Error> SoundChange::fromFile(
-        const char *const fileName) {
+Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileName) {
     std::wifstream file(fileName);
     if (!file.is_open()) {
         return Error { ErrorType::FileOpen, "Failed to open '" + std::string(fileName) + "'" };
@@ -193,7 +193,9 @@ std::variant<std::vector<SoundChange>, Error> SoundChange::fromFile(
     return changes;
 }
 
-std::variant<std::wstring, Error> SoundChange::apply(const std::wstring &word) const {
+//std::variant<std::vector<SoundChange>, Error>
+
+Result<std::wstring> SoundChange::apply(const std::wstring &word) const {
     std::wstringstream changedWord;
     for (size_t i = 0; i < word.length(); i++) {
         const bool correctSound = word[i] == a;

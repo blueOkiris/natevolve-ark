@@ -1,10 +1,10 @@
-# Build system for Soundwarp library
+# Build system for Natevolve Ark library
 
 # Settings
 
 ## Project
 
-PROJNAME :=		sndwrp
+PROJNAME :=		natevolve
 OBJNAME :=		lib$(PROJNAME).a
 SRC :=			$(wildcard src/*.cpp)
 OBJS :=			$(subst src/,obj/,$(subst .cpp,.o,$(SRC)))
@@ -12,7 +12,7 @@ HFILES :=		$(wildcard include/*.hpp)
 
 ## Test
 
-TESTOBJ :=		sndwrp-test
+TESTOBJ :=		test.bin
 TESTSRC :=		$(wildcard test/*.cpp)
 TESTOBJS :=		$(subst test/,test/obj/,$(subst .cpp,.o,$(TESTSRC)))
 

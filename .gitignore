@@ -1,6 +1,6 @@
 # Objects
 
-libsndwrp.a
-sndwrp-test
+*.a
+*.bin
 *.o
 
