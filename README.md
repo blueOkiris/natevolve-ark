@@ -13,7 +13,7 @@ Modules:
 - Evauthor - given a set of grammar changes and a gloss for a sentence, create a new glossed sentence
 - Wordup - given a phonological inventory and syllable rules, randomly generate words
 
-The goal of this project is to serve as a solid underlying component for a GUI, Natevolve Studio (or other front-ends that wish to make use of the code).
+The goal of this project is to serve as a solid underlying component for a GUI application called Natevolve Studio (or other front-ends that wish to make use of the code).
 
 ## Build
 
