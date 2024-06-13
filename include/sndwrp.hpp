@@ -10,6 +10,23 @@ namespace natevolve {
     namespace sndwrp {
         // Represents a mapping of a > b / X_X
         struct SoundChange {
+            // -------- Functions --------
+
+            // Load in a vector of sound changes from a .sw file
+            //
+            // File format is lines of the following syntax:
+            // <sound> '>' <sound> '/' '{' { <sound> | '#' } '}' '_' '{' { <sound> | '#' } '}'
+            // Ex: f>v/{#}_{}
+            static Result<std::vector<SoundChange>> fromFile(const char *const fileName);
+
+            SoundChange(
+                const wchar_t ca, const wchar_t cb,
+                const std::vector<wchar_t> &fCond, const std::vector<wchar_t> &eCond
+            );
+
+            // Given a word in IPA format, apply this sound change to it
+            Result<std::wstring> apply(const std::wstring &word) const;
+
             // -------- Members ---------
 
             // The sound to identify
@@ -26,23 +43,6 @@ namespace natevolve {
 
             // Same thing as above but for post-context
             const std::vector<wchar_t> endCond;
-
-            // -------- Functions --------
-
-            SoundChange(
-                const wchar_t ca, const wchar_t cb,
-                const std::vector<wchar_t> &fCond, const std::vector<wchar_t> &eCond
-            );
-
-            // Load in a vector of sound changes from a .sw file
-            //
-            // File format is lines of the following syntax:
-            // <sound> '>' <sound> '/' '{' { <sound> | '#' } '}' '_' '{' { <sound> | '#' } '}'
-            // Ex: f>v/{#}_{}
-            static Result<std::vector<SoundChange>> fromFile(const char *const fileName);
-
-            // Given a word in IPA format, apply this sound change to it
-            Result<std::wstring> apply(const std::wstring &word) const;
         };
 
         // Given a set of changes, apply each one in order
