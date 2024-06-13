@@ -8,6 +8,7 @@
 #include <codecvt>
 #include <iostream>
 #include <err.hpp>
+#include <natevolve.hpp>
 #include <romanizer.hpp>
 
 using namespace natevolve;
@@ -16,7 +17,10 @@ using namespace romanizer;
 Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
     std::wifstream file(fileName);
     if (!file.is_open()) {
-        return Error { ErrorType::FileOpen, "Failed to open '" + std::string(fileName) + "'" };
+        return Error {
+            ErrorType::FileOpen,
+            toWstr("Failed to open '" + std::string(fileName) + "'")
+        };
     }
 
     std::map<wchar_t, std::wstring> ipaToRom;
@@ -39,8 +43,10 @@ Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected phoneme in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected phoneme in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         wchar_t a = line[col - 1];
@@ -53,12 +59,14 @@ Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected romanization string in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected romanization string in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         std::wstringstream b;
-        while (col - 1 < line.length() && (line[col - 1] != ' ' || line[col - 1] != '\t')) {
+        while (col - 1 < line.length() && (line[col - 1] != L' ' && line[col - 1] != L'\t')) {
             b << line[col - 1];
             col++;
         }
@@ -69,7 +77,10 @@ Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
         if (col - 1 != line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Extra characters in '" + std::string(fileName) + "' on line " + std::to_string(ln)
+                toWstr(
+                    "Extra characters in '" + std::string(fileName) + "' on line "
+                        + std::to_string(ln)
+                )
             };
         }
 
@@ -81,8 +92,10 @@ Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
     if (file.bad()) {
         return Error {
             ErrorType::FileRead,
-            "Failed to read '" + std::string(fileName)
-                + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+            toWstr(
+                "Failed to read '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+            )
         };
     }
 

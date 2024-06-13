@@ -9,12 +9,13 @@ namespace natevolve {
     enum class ErrorType {
         FileOpen,
         FileRead,
-        FileFormat
+        FileFormat,
+        UnknownCategory
     };
 
     struct Error {
         ErrorType type;
-        std::string message;
+        std::wstring message;
     };
 
     template <typename T>

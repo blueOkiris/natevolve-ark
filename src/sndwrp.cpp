@@ -9,6 +9,7 @@
 #include <string>
 #include <codecvt>
 #include <err.hpp>
+#include <natevolve.hpp>
 #include <sndwrp.hpp>
 
 using namespace natevolve;
@@ -22,7 +23,10 @@ SoundChange::SoundChange(
 Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileName) {
     std::wifstream file(fileName);
     if (!file.is_open()) {
-        return Error { ErrorType::FileOpen, "Failed to open '" + std::string(fileName) + "'" };
+        return Error {
+            ErrorType::FileOpen,
+            toWstr("Failed to open '" + std::string(fileName) + "'")
+        };
     }
 
     std::vector<SoundChange> changes;
@@ -49,8 +53,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected phoneme in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected phoneme in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         a = line[col - 1];
@@ -63,8 +69,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'>') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '>' in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected '>' in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         col++;
@@ -76,8 +84,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected phoneme in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected phoneme in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         b = line[col - 1];
@@ -90,8 +100,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'/') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '/' in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected '/' in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         col++;
@@ -103,8 +115,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'{') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '{' in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected '{' in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         col++;
@@ -116,7 +130,9 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '}' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected '}' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         while (line[col - 1] != L'}') {
@@ -128,8 +144,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
             if (col - 1 >= line.length()) {
                 return Error {
                     ErrorType::FileFormat,
-                    "Expected '}' in '" + std::string(fileName)
-                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                    toWstr(
+                        "Expected '}' in '" + std::string(fileName)
+                            + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                    )
                 };
             }
         }
@@ -142,8 +160,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'_') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '_' in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected '_' in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         col++;
@@ -155,8 +175,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length() || line[col - 1] != L'{') {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '{' in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected '{' in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         col++;
@@ -168,8 +190,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 >= line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Expected '}' in '" + std::string(fileName)
-                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                toWstr(
+                    "Expected '}' in '" + std::string(fileName)
+                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                )
             };
         }
         while (line[col - 1] != L'}') {
@@ -181,8 +205,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
             if (col - 1 >= line.length()) {
                 return Error {
                     ErrorType::FileFormat,
-                    "Expected '}' in '" + std::string(fileName)
-                        + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                    toWstr(
+                        "Expected '}' in '" + std::string(fileName)
+                            + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+                    )
                 };
             }
         }
@@ -194,7 +220,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
         if (col - 1 != line.length()) {
             return Error {
                 ErrorType::FileFormat,
-                "Extra characters in '" + std::string(fileName) + "' on line " + std::to_string(ln)
+                toWstr(
+                    "Extra characters in '" + std::string(fileName) + "' on line "
+                        + std::to_string(ln)
+                )
             };
         }
 
@@ -205,8 +234,10 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
     if (file.bad()) {
         return Error {
             ErrorType::FileRead,
-            "Failed to read '" + std::string(fileName)
-                + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+            toWstr(
+                "Failed to read '" + std::string(fileName)
+                    + "' at line " + std::to_string(ln) + ", col " + std::to_string(col)
+            )
         };
     }
 
