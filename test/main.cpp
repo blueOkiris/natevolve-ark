@@ -50,7 +50,7 @@ bool test_apply(const std::vector<natevolve::sndwrp::SoundChange> &changes) {
         L"fak",
         L"faki",
         L"alphat",
-        L"at",
+        L"fat",
         L"pxm"
     });
 
