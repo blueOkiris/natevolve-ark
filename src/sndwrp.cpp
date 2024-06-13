@@ -24,7 +24,6 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
     if (!file.is_open()) {
         return Error { ErrorType::FileOpen, "Failed to open '" + std::string(fileName) + "'" };
     }
-    file.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
 
     std::vector<SoundChange> changes;
     size_t ln = 1;
