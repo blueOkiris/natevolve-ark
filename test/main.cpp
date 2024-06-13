@@ -77,6 +77,15 @@ bool test_apply(const std::vector<natevolve::sndwrp::SoundChange> &changes) {
             changedWord = natevolve::ok(newChangedWord);
             std::wcout << changedWord << L"/" << std::endl;
         }
+
+        std::cout << "Expected: ";
+        const auto result = natevolve::sndwrp::applyAllChanges(word, changes);
+        if (natevolve::isErr(result)) {
+            std::wcout << L"Error (" << static_cast<int>(natevolve::err(result).type) << L") - ";
+            std::cout << natevolve::err(result).message << std::endl;
+        } else {
+            std::wcout << natevolve::ok(result) << std::endl;
+        }
     }
     return true;
 }

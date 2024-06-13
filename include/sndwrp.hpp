@@ -10,24 +10,29 @@ namespace natevolve {
     namespace sndwrp {
         // Represents a mapping of a > b / X_X
         struct SoundChange {
-            // -------- Public Members ---------
+            // -------- Members ---------
 
             // The sound to identify
-            wchar_t a;
+            const wchar_t a;
 
             // The sound to replace it with. For things like apocope, use ∅
-            wchar_t b;
+            const wchar_t b;
 
             // The set of front sounds that can trigger this change.
             // Empty list ignores front condition while # represents word initial boundary
             // Something like all vowels would be { L'a', L'i', L'u' }
             // or whatever vowels exist in the lang
-            std::vector<wchar_t> frntCond;
+            const std::vector<wchar_t> frntCond;
 
             // Same thing as above but for post-context
-            std::vector<wchar_t> endCond;
+            const std::vector<wchar_t> endCond;
 
             // -------- Functions --------
+
+            SoundChange(
+                const wchar_t ca, const wchar_t cb,
+                const std::vector<wchar_t> &fCond, const std::vector<wchar_t> &eCond
+            );
 
             // Load in a vector of sound changes from a .sw file
             //
@@ -36,12 +41,15 @@ namespace natevolve {
             // Ex: f>v/{#}_{}
             static Result<std::vector<SoundChange>> fromFile(const char *const fileName);
 
-            // Given a set of changes, apply each one in order
-            //static Result<std::wstring> applyAll(const std::vector<SoundChange> &changes);
-
             // Given a word in IPA format, apply this sound change to it
             Result<std::wstring> apply(const std::wstring &word) const;
         };
+
+        // Given a set of changes, apply each one in order
+        Result<std::wstring> applyAllChanges(
+            const std::wstring &word,
+            const std::vector<SoundChange> &changes
+        );
     }
 }
 

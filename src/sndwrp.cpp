@@ -13,6 +13,11 @@
 using namespace natevolve;
 using namespace sndwrp;
 
+SoundChange::SoundChange(
+    const wchar_t ca, const wchar_t cb,
+    const std::vector<wchar_t> &fCond, const std::vector<wchar_t> &eCond):
+        a(ca), b(cb), frntCond(fCond), endCond(eCond) {}
+
 Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileName) {
     std::wifstream file(fileName);
     if (!file.is_open()) {
@@ -29,7 +34,11 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
             continue;
         }
 
-        SoundChange change;
+        wchar_t a = L'\0';
+        wchar_t b = L'\0';
+        std::vector<wchar_t> frntCond;
+        std::vector<wchar_t> endCond;
+
         col = 1;
         while (col - 1 < line.length() && (line[col - 1] == ' ' || line[col - 1] == '\t')) {
             col++;
@@ -42,7 +51,7 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
                 "Expected phoneme at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
-        change.a = line[col - 1];
+        a = line[col - 1];
         col++;
         while (col - 1 < line.length() && (line[col - 1] == ' ' || line[col - 1] == '\t')) {
             col++;
@@ -67,7 +76,7 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
                 "Expected phoneme at line " + std::to_string(ln) + ", col " + std::to_string(col)
             };
         }
-        change.b = line[col - 1];
+        b = line[col - 1];
         col++;
         while (col - 1 < line.length() && (line[col - 1] == L' ' || line[col - 1] == L'\t')) {
             col++;
@@ -105,7 +114,7 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
             };
         }
         while (line[col - 1] != L'}') {
-            change.frntCond.push_back(line[col - 1]);
+            frntCond.push_back(line[col - 1]);
             col++;
             while (col - 1 < line.length() && (line[col - 1] == L' ' || line[col - 1] == L'\t')) {
                 col++;
@@ -154,7 +163,7 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
             };
         }
         while (line[col - 1] != L'}') {
-            change.endCond.push_back(line[col - 1]);
+            endCond.push_back(line[col - 1]);
             col++;
             while (col - 1 < line.length() && (line[col - 1] == L' ' || line[col - 1] == L'\t')) {
                 col++;
@@ -178,7 +187,7 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
             };
         }
 
-        changes.push_back(change);
+        changes.push_back(SoundChange(a, b, frntCond, endCond));
         ln++;
     }
 
@@ -192,8 +201,6 @@ Result<std::vector<SoundChange>> SoundChange::fromFile(const char *const fileNam
     file.close();
     return changes;
 }
-
-//std::variant<std::vector<SoundChange>, Error>
 
 Result<std::wstring> SoundChange::apply(const std::wstring &word) const {
     std::wstringstream changedWord;
@@ -213,5 +220,18 @@ Result<std::wstring> SoundChange::apply(const std::wstring &word) const {
         changedWord << c;
     }
     return changedWord.str();
+}
+
+Result<std::wstring> natevolve::sndwrp::applyAllChanges(
+        const std::wstring &word, const std::vector<SoundChange> &changes) {
+    auto changedWord = word;
+    for (const auto &change : changes) {
+        const auto result = change.apply(changedWord);
+        if (isErr(result)) {
+            return err(result);
+        }
+        changedWord = ok(result);
+    }
+    return changedWord;
 }
 
