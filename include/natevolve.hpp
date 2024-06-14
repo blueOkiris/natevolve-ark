@@ -27,5 +27,10 @@ namespace natevolve {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         return converter.from_bytes(src);
     }
+
+    static inline std::string fromWstr(const std::wstring &src) {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        return converter.to_bytes(src);
+    }
 };
 
