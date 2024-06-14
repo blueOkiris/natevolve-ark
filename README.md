@@ -1,5 +1,7 @@
 # Natevolve Ark
 
+NOTE: This library is incomplete
+
 ## Description
 
 A C++ library to aid in the creation of Naturalistic Conlangs
@@ -14,6 +16,14 @@ Modules:
 - Wordup - given a phonological inventory and syllable rules, randomly generate words
 
 The goal of this project is to serve as a solid underlying component for a GUI application called Natevolve Studio (or other front-ends that wish to make use of the code).
+
+## Progress
+
+- [x] Soundwarp
+- [x] Romanizer
+- [ ] Morphball
+- [ ] Evauthor
+- [x] Wordup
 
 ## Build
 
