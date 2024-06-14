@@ -2,6 +2,7 @@
 
 *.a
 *.bin
+*.exe
 *.o
 
 # Test outputs

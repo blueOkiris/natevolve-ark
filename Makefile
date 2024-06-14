@@ -12,7 +12,11 @@ HFILES :=		$(wildcard include/*.hpp)
 
 ## Test
 
+ifeq ($(OS), Windows_NT)
+TESTOBJ :=		test.exe
+else
 TESTOBJ :=		test.bin
+endif
 TESTSRC :=		$(wildcard test/*.cpp)
 TESTOBJS :=		$(subst test/,test/obj/,$(subst .cpp,.o,$(TESTSRC)))
 
@@ -43,14 +47,22 @@ clean:
 ## Main
 
 obj/%.o: src/%.cpp $(HFILES)
+ifeq ($(OS), Windows_NT)
+	-mkdir obj
+else
 	mkdir -p obj
+endif
 	$(CPPC) -o $@ $(CPPFLAGS) -c $<
 
 $(OBJNAME): $(OBJS)
 	ar rcs $@ $(OBJS)
 
 test/obj/%.o: test/%.cpp $(HFILES)
+ifeq ($(OS), Windows_NT)
+	-mkdir test\obj
+else
 	mkdir -p test/obj
+endif
 	$(CPPC) -o $@ $(CPPFLAGS) -c $<
 
 $(TESTOBJ): $(OBJNAME) $(TESTOBJS)
