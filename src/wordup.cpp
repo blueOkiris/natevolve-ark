@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <optional>
 #include <err.hpp>
 #include <natevolve.hpp>
 #include <wordup.hpp>
@@ -272,5 +273,50 @@ Result<std::wstring> Generator::generate(void) const {
     }
 
     return word.str();
+}
+
+std::optional<Error> Generator::toFile(const char *const fileName) const {
+    std::wofstream file(fileName);
+    if (!file.is_open()) {
+        return Error {
+            ErrorType::FileOpen,
+            L"Failed to open '" + toWstr(std::string(fileName)) + L"' for writing"
+        };
+    }
+
+    for (const auto &cat : categories) {
+        file << cat.first << L" { ";
+        for (const auto &sound : cat.second) {
+            file << sound << L" ";
+        }
+        file << L"}\n";
+    }
+
+    file << L"#\n";
+
+    for (const auto &vowel : vowels) {
+        file << vowel << "\n";
+    }
+    
+    file << L"#\n";
+
+    for (const auto &opt : onsetOptions) {
+        for (const auto &cat : opt) {
+            file << cat << L" ";
+        }
+        file << L'\n';
+    }
+    
+    file << L"#\n";
+
+    for (const auto &opt : codaOptions) {
+        for (const auto &cat : opt) {
+            file << cat << L" ";
+        }
+        file << L'\n';
+    }
+
+    file.close();
+    return std::nullopt;
 }
 

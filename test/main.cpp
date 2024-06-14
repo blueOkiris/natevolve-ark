@@ -51,6 +51,15 @@ int main(int argc, char **argv) {
     printGenData(natevolve::ok(wordgen));
     testWordGeneration(natevolve::ok(wordgen));
 
+    const auto saveRes = natevolve::ok(wordgen).toFile("test/test-wordgen2.wu");
+    if (saveRes.has_value()) {
+        std::wcout
+            << L"Error loading Wordup Generator from file." << std::endl
+            << L"Error ID: " << static_cast<int>(saveRes.value().type) << std::endl
+            << L"Error Message: " << saveRes.value().message << std::endl;
+        return 1;
+    }
+
     return 0;
 };
 

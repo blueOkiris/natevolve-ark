@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <optional>
 #include <err.hpp>
 
 namespace natevolve {
@@ -23,6 +24,9 @@ namespace natevolve {
 
             // Given a set up Generator, create a word for me
             Result<std::wstring> generate(void) const;
+
+            // Store the generator settings in a file
+            std::optional<Error> toFile(const char *const fileName) const;
 
             // -------- Members --------
 
