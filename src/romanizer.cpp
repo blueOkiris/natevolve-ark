@@ -38,6 +38,8 @@ Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
             continue;
         }
 
+        std::wcout << line << std::endl;
+
         col = 1;
         while (col - 1 < line.length() && (line[col - 1] == ' ' || line[col - 1] == '\t')) {
             col++;
@@ -58,6 +60,7 @@ Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
         while (col - 1 < line.length() && (line[col - 1] == ' ' || line[col - 1] == '\t')) {
             col++;
         }
+        std::wcout << a << std::endl;
 
         // Get the romanization character(s)
         if (col - 1 >= line.length()) {
@@ -83,7 +86,7 @@ Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
                 ErrorType::FileFormat,
                 toWstr(
                     "Extra characters in '" + std::string(fileName) + "' on line "
-                        + std::to_string(ln)
+                        + std::to_string(ln) + " at col " + std::to_string(col)
                 )
             };
         }

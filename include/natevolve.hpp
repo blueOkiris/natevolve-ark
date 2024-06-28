@@ -1,7 +1,9 @@
 // Small, global helper functions for the whole library
 
 #pragma once
-
+#ifdef _WIN32
+#include <fcntl.h>
+#endif
 #include <locale>
 #include <string>
 #include <random>
@@ -12,10 +14,11 @@ namespace natevolve {
     static std::mt19937 g_rng(g_randDev());
 
     static inline void enableUtf8(void) {
-        std::locale::global(std::locale(""));
 #ifdef _WIN32
+        std::setlocale(LC_ALL, ".utf8");
         _setmode(_fileno(stdout), _O_WTEXT);
 #else
+        std::locale::global(std::locale(""));
         std::setlocale(LC_ALL, "");
 #endif
     }
@@ -23,6 +26,11 @@ namespace natevolve {
     static inline std::wstring toWstr(const std::string &src) {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         return converter.from_bytes(src);
+    }
+
+    static inline std::string fromWstr(const std::wstring &src) {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        return converter.to_bytes(src);
     }
 };
 
