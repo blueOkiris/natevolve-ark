@@ -16,6 +16,10 @@ using namespace romanizer;
 
 Result<Romanizer> Romanizer::fromFile(const char *const fileName) {
     std::wifstream file(fileName);
+#ifdef _WIN32
+    std::locale loc(std::locale::classic(), new std::codecvt_utf8<wchar_t>);
+    file.imbue(loc);
+#endif
     if (!file.is_open()) {
         return Error {
             ErrorType::FileOpen,

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <fstream>
 #include <optional>
+#include <codecvt>
 #include <err.hpp>
 #include <natevolve.hpp>
 #include <wordup.hpp>
@@ -25,6 +26,10 @@ enum class FileParseState {
 
 Result<Generator> Generator::fromFile(const char *const fileName) {
     std::wifstream file(fileName);
+#ifdef _WIN32
+    std::locale loc(std::locale::classic(), new std::codecvt_utf8<wchar_t>);
+    file.imbue(loc);
+#endif
     if (!file.is_open()) {
         return Error {
             ErrorType::FileOpen,
@@ -277,6 +282,10 @@ Result<std::wstring> Generator::generate(void) const {
 
 std::optional<Error> Generator::toFile(const char *const fileName) const {
     std::wofstream file(fileName);
+#ifdef _WIN32
+    std::locale loc(std::locale::classic(), new std::codecvt_utf8<wchar_t>);
+    file.imbue(loc);
+#endif
     if (!file.is_open()) {
         return Error {
             ErrorType::FileOpen,
